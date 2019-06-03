@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IMA SDK Plugin for Clappr</title>
+    <meta name="viewport" content="width=655, user-scalable=yes" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr-ima-plugin@latest/dist/clappr-ima-plugin.min.js"></script>
+    <style>
+      .player {
+        width: 640px;
+        height: 360px;
+        overflow: hidden;
+      }
+      a {
+        color: teal;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>IMA SDK Plugin for Clappr</h2>
+    <p>VMAP with Pre-, Mid-, and Post-rolls, Single Ads.</p>
+
+    <div class="player"></div>
+
+    <script>
+      (function () {
+        console.log('Clappr version ' + Clappr.version);
+
+        var BUNNY = 'https://static.playmedia-cdn.net/resources/sample/h264_big_buck_bunny_trailer-1080p.mp4';
+
+        var TAG_VMAP = 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpost&cmsid=496&vid=short_onecue&correlator=';
+
+        var player = new Clappr.Player({
+          parentId: ".player",
+          source: BUNNY,
+          disableKeyboardShortcuts: true,
+          disableVideoTagContextMenu: true,
+          autoSeekFromUrl: false,
+          width: '100%',
+          height: '100%',
+          autoPlay: !Clappr.Browser.isMobile,
+          playback: {
+            playInline: true,
+            recycleVideo: Clappr.Browser.isMobile,
+          },
+          plugins: [
+            ClapprImaPlugin,
+          ],
+          imaPlugin: {
+            requestAdIfNoAutoplay: true,
+            disableNonLinearForIOS: true,
+            resetAdOnEnded: true,
+            imaAdPlayer: {
+              tag: TAG_VMAP,
+              vpaidMode: 2,
+              locale: 'fr',
+              maxDuration: 30000,
+            },
+          },
+        });
+
+      })();
+    </script>
+
+    <footer>
+      <p><small><strong>Advertising cookies :</strong> this page uses advertising cookies to serve the ads it displays.</small></p>
+      <p><small>Big Buck Bunny - (c) copyright 2008, Blender Foundation - <a href="https://www.bigbuckbunny.org">https://www.bigbuckbunny.org</a>.</small></p>
+      <p><small>Clappr - (c) copyright Globo.com Player authors - <a href="https://github.com/clappr/clappr">https://github.com/clappr/clappr</a>.</small></p>
+      <p><small>Clappr IMA SDK plugin - <a href="https://github.com/kslimani/clappr-ima-plugin">https://github.com/kslimani/clappr-ima-plugin</a>.</small></p>
+    </footer>
+
+  </body>
+</html>
