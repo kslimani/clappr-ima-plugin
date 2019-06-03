@@ -4,6 +4,8 @@
 
 Note: Clappr player version must be >= 0.2.97.
 
+To see the plugin in action, check out [demo page](https://kslimani.github.io/clappr-ima-plugin/).
+
 # Usage
 
 Add both Clappr and the plugin scripts to your HTML:
