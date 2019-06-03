@@ -33,6 +33,7 @@ var player = new Clappr.Player({
       // vpaidMode: 2,
       // locale: 'fr',
       // maxDuration: 30000,
+      // nonLinearMaxDuration: 8000,
     },
   },
 });
