@@ -94,7 +94,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     })
 
     this.listenTo(this.__playback, Events.PLAYBACK_ENDED, () => {
-      if (this._adPlayer) {
+      if (this._adPlayer && ! this._isPlayingAd) {
         this._isEnded = true
 
         // Signal ad player that playback completed
