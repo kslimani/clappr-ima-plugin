@@ -25,8 +25,8 @@
   <body>
     <div class="player"></div>
     <div class="buttons">
-      <button class="btn btn-sintel">Sintel + pre-roll</button>
-      <button class="btn btn-sintel-non-linear">Sintel + non-linear</button>
+      <button class="btn btn-sintel">Skippable pre-roll</button>
+      <button class="btn btn-sintel-non-linear">Non-linear</button>
       <button class="btn btn-resize">Resize player</button>
       <button class="btn btn-reset">Reset player size</button>
     </div>
@@ -92,6 +92,7 @@
             // requestAdIfNoAutoplay: true,
             // disableNonLinearForIOS: true,
             // resetAdOnEnded: true,
+            // enableCustomPlaybackForIOS10Plus: true,
             imaAdPlayer: {
               tag: TAG_VMAP,
               vpaidMode: 2,
@@ -108,7 +109,7 @@
               autoPlay: true, // player is consented
               imaPlugin: {
                 imaAdPlayer: {
-                  tag: TAG_LINEAR,
+                  tag: TAG_SKIPPABLE,
                 },
               },
             });
@@ -120,6 +121,7 @@
               source: SINTEL,
               autoPlay: true, // player is consented
               imaPlugin: {
+                disableNonLinearForIOS: true,
                 imaAdPlayer: {
                   tag: TAG_NON_LINEAR,
                 },
