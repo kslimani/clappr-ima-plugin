@@ -204,7 +204,8 @@ function (_UICorePlugin) {
       this._resetAd();
 
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_PLAY_INTENT, function () {
-        // Assumes that "PLAYBACK_PLAY_INTENT" event is from user interaction
+        if (_this2._isPlayingAd) return; // Assumes that "PLAYBACK_PLAY_INTENT" event is from user interaction
+
         if (_this2._adPlayer && _this2._isFirstPlay) {
           _this2._adPlayer.initAdDisplayContainer();
 
@@ -212,7 +213,8 @@ function (_UICorePlugin) {
         }
       });
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_PLAY, function () {
-        // FIXME: add a mechanism in Clappr to prevents playback to play on "PLAYBACK_PLAY_INTENT" event
+        if (_this2._isPlayingAd) return; // FIXME: add a mechanism in Clappr to prevents playback to play on "PLAYBACK_PLAY_INTENT" event
+
         if (_this2._adPlayer && _this2._isFirstPlay) {
           _this2._isFirstPlay = false;
           _this2._isEnded = false;
@@ -224,7 +226,9 @@ function (_UICorePlugin) {
         }
       });
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_ENDED, function () {
-        if (_this2._adPlayer && !_this2._isPlayingAd) {
+        if (_this2._isPlayingAd) return;
+
+        if (_this2._adPlayer) {
           _this2._isEnded = true; // Signal ad player that playback completed
 
           _this2._adPlayer && _this2._adPlayer.ended();
