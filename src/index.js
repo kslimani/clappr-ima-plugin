@@ -61,6 +61,26 @@ export default class ClapprImaPlugin extends UICorePlugin {
     return this.__playback.tagName === 'video'
   }
 
+  get _sourceIsRestored() {
+    return (this._playbackIsVideo && ! this._isNonLinear)
+      ? this._src === this.__playback.el.src
+      : true
+  }
+
+  get _playbackCurrentTime() {
+    return this.__playback.getCurrentTime
+      ? this.__playback.getCurrentTime()
+      : this.__playback.el.currentTime // Assume video element
+  }
+
+  get _isIOS10Plus() {
+    return Browser.isiOS && Browser.os.majorVersion >= 10
+  }
+
+  get _isIOS10PlusWithAdError() {
+    return this._hasAdError && this._isIOS10Plus
+  }
+
   _onContainerChanged() {
     if (this._adPlayer) {
       // Assumes player has loaded another source
@@ -88,6 +108,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
       if (this._adPlayer && this._isFirstPlay) {
         this._isFirstPlay = false
         this._isEnded = false
+        this._src = this.__playback.el.src
         this.__playback.pause()
         this._adPlayer.play()
       }
@@ -123,6 +144,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
 
   _resetAd() {
     this._isFirstPlay = true
+    this._isNonLinear = false
   }
 
   _initPlugin() {
@@ -167,10 +189,19 @@ export default class ClapprImaPlugin extends UICorePlugin {
         return this._resumeContent()
       }
 
+      // Disable custom playback by default for iOS 10+ to handle skippable ads
+      // Plugin will take care of video content source
+      this.__config.enableCustomPlaybackForIOS10Plus || google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true)
+
       player.on('ad_begin', (o) => {
         this.$el.show()
         this._isPlayingAd = true
+        this._hasAdError = false
         this._pauseContent()
+      })
+
+      player.on('ad_error', (o) => {
+        this._hasAdError = true
       })
 
       player.on('ad_non_linear', (o) => {
@@ -184,7 +215,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
             // therefore it is skipped if disableNonLinearForIOS is set
             this._isPlayingAd = false
             this.$el.hide()
-            this._adPlayer && this._adPlayer.end()
+            this._adPlayer && this._adPlayer.stop()
           } else {
             this._isPlayingAd = true
             this.$el.show()
@@ -194,12 +225,15 @@ export default class ClapprImaPlugin extends UICorePlugin {
           this.$el.hide()
         }
 
-        // FIXME: content may not be restored on iOS 10 plus if custom playback is disabled
-
+        // Avoid video to starts over after a post-roll
         if (this._isEnded) {
-          this._enableUI(false)
+          this._restoreSourceIfMissing(() => {
+            this._enableUI(false)
+          })
         } else {
-          this._resumeContent()
+          this._restoreSourceIfMissing(() => {
+            this._resumeContent()
+          })
         }
       })
 
@@ -234,10 +268,53 @@ export default class ClapprImaPlugin extends UICorePlugin {
       // Video source may not be set yet by playback
       if (!src || src.length === 0) {
         this.__playback.el.src = Utils.Media.mp4
+      } else {
+        this._src = src
       }
     }
 
-    next()
+    next && next()
+  }
+
+  _restoreSourceIfMissing(next) {
+    if (this._sourceIsRestored && ! this._isIOS10PlusWithAdError) {
+      next && next()
+    } else {
+      // Source may not be restored on iOS 10 plus if IMA custom playback is disabled
+      this._setSource(this._src, () => {
+        // Check for seek after mid-roll
+        if (this._pauseTime > 1 && ! this._isEnded) {
+          this._seek(this._pauseTime, next)
+        } else {
+          next && next()
+        }
+      })
+    }
+  }
+
+  _setSource(src, next) {
+    let eh = () => {
+      this.__playback.el.removeEventListener('loadedmetadata', eh, false)
+      this.__playback.el.removeEventListener('error', eh, false)
+      next && next()
+    }
+
+    this.__playback.el.addEventListener('loadedmetadata', eh, false)
+    this.__playback.el.addEventListener('error', eh, false)
+    this.__playback.el.src = src
+    this.__playback.el.load()
+  }
+
+  _seek(seekTime, next) {
+    if (this._playbackIsVideo && ! this.__playback.el.seekable.length) {
+      return setTimeout(() => {
+        this._seek(seekTime, next)
+      }, 100)
+    }
+
+    // Assume playback implements seek method
+    this.__playback.seek && this.__playback.seek(seekTime)
+    next && next()
   }
 
   _disableUI() {
@@ -276,6 +353,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
   }
 
   _pauseContent() {
+    this._pauseTime = this._playbackCurrentTime
     this.__playback.pause()
     this._disableUI()
   }
