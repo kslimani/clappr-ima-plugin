@@ -216,6 +216,7 @@ function (_UICorePlugin) {
         if (_this2._adPlayer && _this2._isFirstPlay) {
           _this2._isFirstPlay = false;
           _this2._isEnded = false;
+          _this2._src = _this2.__playback.el.src;
 
           _this2.__playback.pause();
 
@@ -223,7 +224,7 @@ function (_UICorePlugin) {
         }
       });
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_ENDED, function () {
-        if (_this2._adPlayer) {
+        if (_this2._adPlayer && !_this2._isPlayingAd) {
           _this2._isEnded = true; // Signal ad player that playback completed
 
           _this2._adPlayer && _this2._adPlayer.ended();
@@ -253,6 +254,7 @@ function (_UICorePlugin) {
     key: "_resetAd",
     value: function _resetAd() {
       this._isFirstPlay = true;
+      this._isNonLinear = false;
     }
   }, {
     key: "_initPlugin",
@@ -296,14 +298,21 @@ function (_UICorePlugin) {
         // Resume content if ad player creation failed
         if (error) {
           return _this3._resumeContent();
-        }
+        } // Disable custom playback by default for iOS 10+ to handle skippable ads
+        // Plugin will take care of video content source
 
+
+        _this3.__config.enableCustomPlaybackForIOS10Plus || google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
         player.on('ad_begin', function (o) {
           _this3.$el.show();
 
           _this3._isPlayingAd = true;
+          _this3._hasAdError = false;
 
           _this3._pauseContent();
+        });
+        player.on('ad_error', function (o) {
+          _this3._hasAdError = true;
         });
         player.on('ad_non_linear', function (o) {
           _this3._isNonLinear = true;
@@ -317,7 +326,7 @@ function (_UICorePlugin) {
 
               _this3.$el.hide();
 
-              _this3._adPlayer && _this3._adPlayer.end();
+              _this3._adPlayer && _this3._adPlayer.stop();
             } else {
               _this3._isPlayingAd = true;
 
@@ -327,13 +336,17 @@ function (_UICorePlugin) {
             _this3._isPlayingAd = false;
 
             _this3.$el.hide();
-          } // FIXME: content may not be restored on iOS 10 plus if custom playback is disabled
+          } // Avoid video to starts over after a post-roll
 
 
           if (_this3._isEnded) {
-            _this3._enableUI(false);
+            _this3._restoreSourceIfMissing(function () {
+              _this3._enableUI(false);
+            });
           } else {
-            _this3._resumeContent();
+            _this3._restoreSourceIfMissing(function () {
+              _this3._resumeContent();
+            });
           }
         });
         _this3._adPlayer = player;
@@ -368,10 +381,67 @@ function (_UICorePlugin) {
 
         if (!src || src.length === 0) {
           this.__playback.el.src = _clappr.Utils.Media.mp4;
+        } else {
+          this._src = src;
         }
       }
 
-      next();
+      next && next();
+    }
+  }, {
+    key: "_restoreSourceIfMissing",
+    value: function _restoreSourceIfMissing(next) {
+      var _this4 = this;
+
+      if (this._sourceIsRestored && !this._isIOS10PlusWithAdError) {
+        next && next();
+      } else {
+        // Source may not be restored on iOS 10 plus if IMA custom playback is disabled
+        this._setSource(this._src, function () {
+          // Check for seek after mid-roll
+          if (_this4._pauseTime > 1 && !_this4._isEnded) {
+            _this4._seek(_this4._pauseTime, next);
+          } else {
+            next && next();
+          }
+        });
+      }
+    }
+  }, {
+    key: "_setSource",
+    value: function _setSource(src, next) {
+      var _this5 = this;
+
+      var eh = function eh() {
+        _this5.__playback.el.removeEventListener('loadedmetadata', eh, false);
+
+        _this5.__playback.el.removeEventListener('error', eh, false);
+
+        next && next();
+      };
+
+      this.__playback.el.addEventListener('loadedmetadata', eh, false);
+
+      this.__playback.el.addEventListener('error', eh, false);
+
+      this.__playback.el.src = src;
+
+      this.__playback.el.load();
+    }
+  }, {
+    key: "_seek",
+    value: function _seek(seekTime, next) {
+      var _this6 = this;
+
+      if (this._playbackIsVideo && !this.__playback.el.seekable.length) {
+        return setTimeout(function () {
+          _this6._seek(seekTime, next);
+        }, 100);
+      } // Assume playback implements seek method
+
+
+      this.__playback.seek && this.__playback.seek(seekTime);
+      next && next();
     }
   }, {
     key: "_disableUI",
@@ -415,6 +485,8 @@ function (_UICorePlugin) {
   }, {
     key: "_pauseContent",
     value: function _pauseContent() {
+      this._pauseTime = this._playbackCurrentTime;
+
       this.__playback.pause();
 
       this._disableUI();
@@ -467,6 +539,26 @@ function (_UICorePlugin) {
     key: "_playbackIsVideo",
     get: function get() {
       return this.__playback.tagName === 'video';
+    }
+  }, {
+    key: "_sourceIsRestored",
+    get: function get() {
+      return this._playbackIsVideo && !this._isNonLinear ? this._src === this.__playback.el.src : true;
+    }
+  }, {
+    key: "_playbackCurrentTime",
+    get: function get() {
+      return this.__playback.getCurrentTime ? this.__playback.getCurrentTime() : this.__playback.el.currentTime; // Assume video element
+    }
+  }, {
+    key: "_isIOS10Plus",
+    get: function get() {
+      return _clappr.Browser.isiOS && _clappr.Browser.os.majorVersion >= 10;
+    }
+  }, {
+    key: "_isIOS10PlusWithAdError",
+    get: function get() {
+      return this._hasAdError && this._isIOS10Plus;
     }
   }]);
 
