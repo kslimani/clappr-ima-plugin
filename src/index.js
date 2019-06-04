@@ -96,6 +96,8 @@ export default class ClapprImaPlugin extends UICorePlugin {
     this._resetAd()
 
     this.listenTo(this.__playback, Events.PLAYBACK_PLAY_INTENT, () => {
+      if (this._isPlayingAd) return
+
       // Assumes that "PLAYBACK_PLAY_INTENT" event is from user interaction
       if (this._adPlayer && this._isFirstPlay) {
         this._adPlayer.initAdDisplayContainer()
@@ -104,6 +106,8 @@ export default class ClapprImaPlugin extends UICorePlugin {
     })
 
     this.listenTo(this.__playback, Events.PLAYBACK_PLAY, () => {
+      if (this._isPlayingAd) return
+
       // FIXME: add a mechanism in Clappr to prevents playback to play on "PLAYBACK_PLAY_INTENT" event
       if (this._adPlayer && this._isFirstPlay) {
         this._isFirstPlay = false
@@ -115,7 +119,9 @@ export default class ClapprImaPlugin extends UICorePlugin {
     })
 
     this.listenTo(this.__playback, Events.PLAYBACK_ENDED, () => {
-      if (this._adPlayer && ! this._isPlayingAd) {
+      if (this._isPlayingAd) return
+
+      if (this._adPlayer) {
         this._isEnded = true
 
         // Signal ad player that playback completed
