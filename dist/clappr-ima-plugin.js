@@ -181,8 +181,7 @@ function (_UICorePlugin) {
       }
 
       this.listenTo(this.core, _clappr.Events.CORE_READY, this._onCoreReady);
-
-      _clappr.Mediator.on("".concat(this.core.options.playerId, ":").concat(_clappr.Events.PLAYER_RESIZE), this._onPlayerResize, this);
+      this.listenTo(this.core, _clappr.Events.CORE_RESIZE, this._onResize);
     }
   }, {
     key: "_onContainerChanged",
@@ -248,8 +247,8 @@ function (_UICorePlugin) {
       this._coreAutoplay && (this.core._options.autoPlay = true);
     }
   }, {
-    key: "_onPlayerResize",
-    value: function _onPlayerResize(evt) {
+    key: "_onResize",
+    value: function _onResize(evt) {
       if (evt.width && evt.width > 0) {
         this._adPlayer && this._adPlayer.resize(evt.width, evt.height);
       }
