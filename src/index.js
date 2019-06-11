@@ -34,7 +34,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     }
 
     this.listenTo(this.core, Events.CORE_READY, this._onCoreReady)
-    Mediator.on(`${this.core.options.playerId}:${Events.PLAYER_RESIZE}`, this._onPlayerResize, this)
+    this.listenTo(this.core, Events.CORE_RESIZE, this._onResize)
   }
 
   get __config() {
@@ -142,7 +142,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     this._coreAutoplay && (this.core._options.autoPlay = true)
   }
 
-  _onPlayerResize(evt) {
+  _onResize(evt) {
     if (evt.width && evt.width > 0) {
       this._adPlayer && this._adPlayer.resize(evt.width, evt.height)
     }
