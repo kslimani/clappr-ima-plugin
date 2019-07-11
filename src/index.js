@@ -62,6 +62,11 @@ export default class ClapprImaPlugin extends UICorePlugin {
   }
 
   get _sourceIsRestored() {
+    // Temporary workaround for desktop HLS source. See #5
+    if (! Browser.isMobile && this.__playback.name === 'hls') {
+      return true
+    }
+
     return (this._playbackIsVideo && ! this._isNonLinear)
       ? this._src === this.__playback.el.src
       : true
