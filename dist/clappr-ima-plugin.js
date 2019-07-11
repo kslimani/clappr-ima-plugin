@@ -546,6 +546,11 @@ function (_UICorePlugin) {
   }, {
     key: "_sourceIsRestored",
     get: function get() {
+      // Temporary workaround for desktop HLS source. See #5
+      if (!_clappr.Browser.isMobile && this.__playback.name === 'hls') {
+        return true;
+      }
+
       return this._playbackIsVideo && !this._isNonLinear ? this._src === this.__playback.el.src : true;
     }
   }, {
