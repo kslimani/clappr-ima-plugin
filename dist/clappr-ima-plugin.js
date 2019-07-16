@@ -544,14 +544,17 @@ function (_UICorePlugin) {
       return this.__playback.tagName === 'video';
     }
   }, {
+    key: "_playbackIsNativeVideo",
+    get: function get() {
+      return this.__playback.name === 'html5_video';
+    }
+  }, {
     key: "_sourceIsRestored",
     get: function get() {
-      // Temporary workaround for desktop HLS source. See #5
-      if (!_clappr.Browser.isMobile && this.__playback.name === 'hls') {
-        return true;
-      }
-
-      return this._playbackIsVideo && !this._isNonLinear ? this._src === this.__playback.el.src : true;
+      // Video source is checked only if "native" video playback,
+      // otherwise it assume that custom playback is not used by IMA SDK
+      // See also https://github.com/kslimani/clappr-ima-plugin/issues/5
+      return this._playbackIsNativeVideo && !this._isNonLinear ? this._src === this.__playback.el.src : true;
     }
   }, {
     key: "_playbackCurrentTime",
@@ -1187,7 +1190,9 @@ function () {
 
       this._adsManager = adsManagerLoadedEvent.getAdsManager(this._o.video, adsRenderingSettings);
 
-      this._bindAdsManagerEvents(); // Ad is ready to be played
+      this._bindAdsManagerEvents();
+
+      this._dispatch('ads_manager', this._adsManager); // Ad is ready to be played
 
 
       this._adRequesting = false;
@@ -1386,7 +1391,6 @@ exports = module.exports = __webpack_require__(4)(false);
 exports.push([module.i, ".ima-plugin[data-ima] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  text-align: left; }\n  .ima-plugin[data-ima] .ima-ad-container[data-ima] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n", ""]);
 
 
-
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -1399,6 +1403,7 @@ exports.push([module.i, ".ima-plugin[data-ima] {\n  position: absolute;\n  top: 
   Author Tobias Koppers @sokra
 */
 // css base code, injected by the css-loader
+// eslint-disable-next-line func-names
 module.exports = function (useSourceMap) {
   var list = []; // return the list of modules as css string
 
@@ -1407,22 +1412,25 @@ module.exports = function (useSourceMap) {
       var content = cssWithMappingToString(item, useSourceMap);
 
       if (item[2]) {
-        return '@media ' + item[2] + '{' + content + '}';
-      } else {
-        return content;
+        return "@media ".concat(item[2], "{").concat(content, "}");
       }
+
+      return content;
     }).join('');
   }; // import a list of modules into the list
+  // eslint-disable-next-line func-names
 
 
   list.i = function (modules, mediaQuery) {
     if (typeof modules === 'string') {
+      // eslint-disable-next-line no-param-reassign
       modules = [[null, modules, '']];
     }
 
     var alreadyImportedModules = {};
 
     for (var i = 0; i < this.length; i++) {
+      // eslint-disable-next-line prefer-destructuring
       var id = this[i][0];
 
       if (id != null) {
@@ -1430,8 +1438,8 @@ module.exports = function (useSourceMap) {
       }
     }
 
-    for (i = 0; i < modules.length; i++) {
-      var item = modules[i]; // skip already imported module
+    for (var _i = 0; _i < modules.length; _i++) {
+      var item = modules[_i]; // skip already imported module
       // this implementation is not 100% perfect for weird media query combinations
       // when a module is imported multiple times with different media queries.
       // I hope this will never occur (Hey this way we have smaller bundles)
@@ -1440,7 +1448,7 @@ module.exports = function (useSourceMap) {
         if (mediaQuery && !item[2]) {
           item[2] = mediaQuery;
         } else if (mediaQuery) {
-          item[2] = '(' + item[2] + ') and (' + mediaQuery + ')';
+          item[2] = "(".concat(item[2], ") and (").concat(mediaQuery, ")");
         }
 
         list.push(item);
@@ -1452,7 +1460,8 @@ module.exports = function (useSourceMap) {
 };
 
 function cssWithMappingToString(item, useSourceMap) {
-  var content = item[1] || '';
+  var content = item[1] || ''; // eslint-disable-next-line prefer-destructuring
+
   var cssMapping = item[3];
 
   if (!cssMapping) {
@@ -1462,7 +1471,7 @@ function cssWithMappingToString(item, useSourceMap) {
   if (useSourceMap && typeof btoa === 'function') {
     var sourceMapping = toComment(cssMapping);
     var sourceURLs = cssMapping.sources.map(function (source) {
-      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';
+      return "/*# sourceURL=".concat(cssMapping.sourceRoot).concat(source, " */");
     });
     return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
   }
@@ -1474,8 +1483,8 @@ function cssWithMappingToString(item, useSourceMap) {
 function toComment(sourceMap) {
   // eslint-disable-next-line no-undef
   var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-  return '/*# ' + data + ' */';
+  var data = "sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(base64);
+  return "/*# ".concat(data, " */");
 }
 
 /***/ })
