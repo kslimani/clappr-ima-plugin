@@ -61,13 +61,15 @@ export default class ClapprImaPlugin extends UICorePlugin {
     return this.__playback.tagName === 'video'
   }
 
-  get _sourceIsRestored() {
-    // Temporary workaround for desktop HLS source. See #5
-    if (! Browser.isMobile && this.__playback.name === 'hls') {
-      return true
-    }
+  get _playbackIsNativeVideo() {
+    return this.__playback.name === 'html5_video'
+  }
 
-    return (this._playbackIsVideo && ! this._isNonLinear)
+  get _sourceIsRestored() {
+    // Video source is checked only if "native" video playback,
+    // otherwise it assume that custom playback is not used by IMA SDK
+    // See also https://github.com/kslimani/clappr-ima-plugin/issues/5
+    return (this._playbackIsNativeVideo && ! this._isNonLinear)
       ? this._src === this.__playback.el.src
       : true
   }
