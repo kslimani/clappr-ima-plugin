@@ -267,11 +267,17 @@ export default class ClapprImaPlugin extends UICorePlugin {
               this._adPlayer.play()
             })
           } else {
-            this.__config.requestAdIfNoAutoplay && this._adPlayer.request()
+            this._mayRequestAdIfNoAutoplay()
           }
         })
+      } else {
+        this._mayRequestAdIfNoAutoplay()
       }
     })
+  }
+
+  _mayRequestAdIfNoAutoplay() {
+    this.__config.requestAdIfNoAutoplay && this._adPlayer.request()
   }
 
   _setDummySourceIfMissing(next) {
