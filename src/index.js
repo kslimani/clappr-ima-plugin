@@ -128,7 +128,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     this.listenTo(this.__playback, Events.PLAYBACK_ENDED, () => {
       if (this._isPlayingAd) return
 
-      if (this._adPlayer) {
+      if (this._adPlayer && ! this._isEnded) {
         this._isEnded = true
 
         // Signal ad player that playback completed
@@ -158,6 +158,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
   _resetAd() {
     this._isFirstPlay = true
     this._isNonLinear = false
+    this._isEnded = false
   }
 
   _initPlugin() {
