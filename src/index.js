@@ -57,8 +57,9 @@ export default class ClapprImaPlugin extends UICorePlugin {
     return !!(this.__config.imaAdPlayer && this.__config.imaAdPlayer.tag)
   }
 
-  get _playbackIsVideo() {
+  get _playbackIsMedia() {
     return this.__playback.tagName === 'video'
+      || this.__playback.tagName === 'audio'
   }
 
   get _playbackIsNativeVideo() {
@@ -167,7 +168,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     config.video = this.__playback.el
     config.displayContainer = this._adContainer
 
-    if (! this._playbackIsVideo && Browser.isMobile) {
+    if (! this._playbackIsMedia && Browser.isMobile) {
       // Mobile device require an HTML5 video element
       config.tag = false
     } else if (this.__playback.name === 'no_op') {
@@ -192,7 +193,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     this._clickToPausePlugin = this.__container.getPlugin('click_to_pause')
 
     // Hide video source preview using a black 1 pixel video poster for smoother user experience (iOS/MacOSX)
-    if (this._playbackIsVideo && ! this.__playback.el.hasAttribute('poster')) {
+    if (this._playbackIsMedia && ! this.__playback.el.hasAttribute('poster')) {
       this.__playback.el.poster = svgPixel
     }
 
@@ -282,7 +283,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
   }
 
   _setDummySourceIfMissing(next) {
-    if (this._playbackIsVideo) {
+    if (this._playbackIsMedia) {
       let src = this.__playback.el && this.__playback.el.src
 
       // Video source may not be set yet by playback
@@ -326,7 +327,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
   }
 
   _seek(seekTime, next) {
-    if (this._playbackIsVideo && ! this.__playback.el.seekable.length) {
+    if (this._playbackIsMedia && ! this.__playback.el.seekable.length) {
       return setTimeout(() => {
         this._seek(seekTime, next)
       }, 100)
