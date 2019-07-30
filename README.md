@@ -22,6 +22,9 @@ Then add `ClapprImaPlugin` into the list of plugins of your player instance, and
 ```javascript
 var player = new Clappr.Player({
   source: "https://your.video/here.mp4",
+  playback: {
+    playInline: true, // Required by skippable ads on iOS (not fullscreen)
+  },
   plugins: [
     ClapprImaPlugin
   ],
@@ -42,6 +45,8 @@ var player = new Clappr.Player({
 ```
 
 This plugin assumes that `imaAdPlayer` configuration property is [IMA Ad player](https://github.com/kslimani/ima-ad-player) configuration object.
+
+[Skippable ads](https://developers.google.com/interactive-media-ads/docs/sdks/html5/skippable-ads) require that your video player play content inline (not fullscreen) on iPhone.
 
 # Development
 
