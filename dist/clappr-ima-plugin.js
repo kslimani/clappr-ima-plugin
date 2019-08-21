@@ -202,6 +202,7 @@ function (_UICorePlugin) {
 
       this._resetAd();
 
+      this._isEnded = false;
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_PLAY_INTENT, function () {
         if (_this2._isPlayingAd) return; // Assumes that "PLAYBACK_PLAY_INTENT" event is from user interaction
 
@@ -258,7 +259,6 @@ function (_UICorePlugin) {
     value: function _resetAd() {
       this._isFirstPlay = true;
       this._isNonLinear = false;
-      this._isEnded = false;
     }
   }, {
     key: "_initPlugin",
@@ -1375,7 +1375,7 @@ module.exports = exports.default;
 
 exports = module.exports = __webpack_require__(4)(false);
 // Module
-exports.push([module.i, ".ima-plugin[data-ima] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  text-align: left; }\n  .ima-plugin[data-ima] .ima-ad-container[data-ima] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%; }\n", ""]);
+exports.push([module.i, ".ima-plugin[data-ima]{position:absolute;top:0;left:0;width:100%;height:100%;text-align:left}.ima-plugin[data-ima] .ima-ad-container[data-ima]{position:absolute;top:0;left:0;width:100%;height:100%}\n", ""]);
 
 
 /***/ }),
