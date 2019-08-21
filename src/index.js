@@ -103,6 +103,8 @@ export default class ClapprImaPlugin extends UICorePlugin {
     // Reset ad scenario
     this._resetAd()
 
+    this._isEnded = false
+
     this.listenTo(this.__playback, Events.PLAYBACK_PLAY_INTENT, () => {
       if (this._isPlayingAd) return
 
@@ -159,7 +161,6 @@ export default class ClapprImaPlugin extends UICorePlugin {
   _resetAd() {
     this._isFirstPlay = true
     this._isNonLinear = false
-    this._isEnded = false
   }
 
   _initPlugin() {
