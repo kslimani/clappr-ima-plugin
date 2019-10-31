@@ -1,6 +1,6 @@
 {
   "name": "clappr-ima-plugin",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "IMA SDK Plugin for Clappr.",
   "main": "dist/clappr-ima-plugin.js",
   "scripts": {
@@ -35,6 +35,6 @@
     "webpack-dev-server": "^3.8"
   },
   "dependencies": {
-    "ima-ad-player": "^0.4.1"
+    "ima-ad-player": "^0.4"
   }
 }
