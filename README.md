@@ -1,4 +1,4 @@
-# IMA SDK Plugin for Clappr
+# Interactive Media Ads (IMA) SDK plugin for Clappr
 
 [Google IMA HTML5 SDK](https://developers.google.com/interactive-media-ads/docs/sdks/html5/quickstart) advert plugin for [Clappr](https://github.com/clappr/clappr) video player.
 
@@ -32,7 +32,7 @@ var player = new Clappr.Player({
     // requestAdIfNoAutoplay: true,
     // disableNonLinearForIOS: true,
     // resetAdOnEnded: true,
-    // onAdPlayerReady: function (adPlayer) { console.log(adPlayer); },
+    // onAdPlayerReady: function (adPlayer) { adPlayer.on('first_quartile', function(o) { console.log(o); }); },
     imaAdPlayer: {
       tag: 'https://myadserver.com/path/to/vast/tag.xml',
       // vpaidMode: 2,
@@ -44,9 +44,19 @@ var player = new Clappr.Player({
 });
 ```
 
-This plugin assumes that `imaAdPlayer` configuration property is [IMA Ad player](https://github.com/kslimani/ima-ad-player) configuration object.
-
 [Skippable ads](https://developers.google.com/interactive-media-ads/docs/sdks/html5/skippable-ads) require that your video player play content inline (not fullscreen) on iPhone.
+
+# Plugin options
+
+`requestAdIfNoAutoplay` : _(default is false)_ set this option to `true` to attempt to pre-request advert if autoplay is not allowed by browser. By default, advert is requested when video content is started.
+
+`disableNonLinearForIOS` : _(default is false)_ set this option to `true` to not display non-linear advert on iOS devices. There is a [known issue](https://github.com/kslimani/clappr-ima-plugin/issues/3) with non-linear advert and "click_to_play" Clappr internal plugin on iOS devices.
+
+`resetAdOnEnded` : _(default is false)_ set this option to `true` to reset advert scenario when content video is ended. By default, advert is not displayed again if video content is restarted.
+
+`onAdPlayerReady` can be used to retrieve [AdPlayer](https://github.com/kslimani/ima-ad-player) instance, providing a Function. _(may be usefull to bind specific ad events)_
+
+`imaAdPlayer` is [IMA Ad player](https://github.com/kslimani/ima-ad-player) configuration object. _(must at least contain "tag" property)_
 
 # Development
 
