@@ -39,6 +39,10 @@ var player = new Clappr.Player({
       // locale: 'fr',
       // maxDuration: 30000,
       // nonLinearMaxDuration: 8000,
+      // adsRenderingOptions: {
+      //   useStyledLinearAds: true,
+      //   useStyledNonLinearAds: true,
+      // },
     },
   },
 });

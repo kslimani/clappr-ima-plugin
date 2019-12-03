@@ -100,6 +100,10 @@
               vpaidMode: 2,
               locale: 'fr',
               maxDuration: 30000,
+              adsRenderingOptions: {
+                useStyledLinearAds: true,
+                useStyledNonLinearAds: true,
+              },
             },
           },
         });
@@ -112,6 +116,10 @@
               imaPlugin: {
                 imaAdPlayer: {
                   tag: TAG_SKIPPABLE,
+                  adsRenderingOptions: {
+                    useStyledLinearAds: true,
+                    useStyledNonLinearAds: true,
+                  },
                 },
               },
             });
@@ -126,6 +134,10 @@
                 disableNonLinearForIOS: true,
                 imaAdPlayer: {
                   tag: TAG_NON_LINEAR,
+                  adsRenderingOptions: {
+                    useStyledLinearAds: true,
+                    useStyledNonLinearAds: true,
+                  },
                 },
               },
             });
