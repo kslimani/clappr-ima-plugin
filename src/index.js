@@ -118,7 +118,13 @@ export default class ClapprImaPlugin extends UICorePlugin {
     this.listenTo(this.__playback, Events.PLAYBACK_PLAY, () => {
       if (this._isPlayingAd) return
 
+      // Playback source may have changed
+      if (this._src !== this.__playback.el.src) {
+        this._src = this.__playback.el.src
+      }
+
       // FIXME: add a mechanism in Clappr to prevents playback to play on "PLAYBACK_PLAY_INTENT" event
+      // FIXME: Alternatively, remove "dummy" source feature and autostart playback, with the risk to degrade user experience ?
       if (this._adPlayer && this._isFirstPlay) {
         this._isFirstPlay = false
         this._isEnded = false
@@ -129,7 +135,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
     })
 
     this.listenTo(this.__playback, Events.PLAYBACK_ENDED, () => {
-      if (this._isPlayingAd) return
+      if (this._isPlayingAd || this._mayAutoStartMutedAdPlayer) return
 
       if (this._adPlayer && ! this._isEnded) {
         this._isEnded = true
@@ -139,6 +145,10 @@ export default class ClapprImaPlugin extends UICorePlugin {
 
         this.__config.resetAdOnEnded && this._resetAd()
       }
+    })
+
+    this.listenTo(this.__container, Events.CONTAINER_VOLUME, (v) => {
+      this._adPlayer && this._adPlayer.setVolume(v/100)
     })
 
     this.__container.$el.append(this.el)
@@ -202,6 +212,8 @@ export default class ClapprImaPlugin extends UICorePlugin {
     ImaAdPlayer(config, (player, error) => {
       // Resume content if ad player creation failed
       if (error) {
+        this._mayAutoStartMutedAdPlayer = false
+
         return this._resumeContent()
       }
 
@@ -241,6 +253,8 @@ export default class ClapprImaPlugin extends UICorePlugin {
           this.$el.hide()
         }
 
+        this._mayAutoStartMutedAdPlayer = false
+
         // Avoid video to starts over after a post-roll
         if (this._isEnded) {
           this._restoreSourceIfMissing(() => {
@@ -267,6 +281,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
             this._isFirstPlay = false
             this._isEnded = false
             this._setDummySourceIfMissing(() => {
+              this._mayAutoStartMutedAdPlayer = true
               this._adPlayer.play()
             })
           } else {
