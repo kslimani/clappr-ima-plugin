@@ -1441,7 +1441,13 @@ function (_UICorePlugin) {
         }
       });
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_PLAY, function () {
-        if (_this2._isPlayingAd) return; // FIXME: add a mechanism in Clappr to prevents playback to play on "PLAYBACK_PLAY_INTENT" event
+        if (_this2._isPlayingAd) return; // Playback source may have changed
+
+        if (_this2._src !== _this2.__playback.el.src) {
+          _this2._src = _this2.__playback.el.src;
+        } // FIXME: add a mechanism in Clappr to prevents playback to play on "PLAYBACK_PLAY_INTENT" event
+        // FIXME: Alternatively, remove "dummy" source feature and autostart playback, with the risk to degrade user experience ?
+
 
         if (_this2._adPlayer && _this2._isFirstPlay) {
           _this2._isFirstPlay = false;
@@ -1454,7 +1460,7 @@ function (_UICorePlugin) {
         }
       });
       this.listenTo(this.__playback, _clappr.Events.PLAYBACK_ENDED, function () {
-        if (_this2._isPlayingAd) return;
+        if (_this2._isPlayingAd || _this2._mayAutoStartMutedAdPlayer) return;
 
         if (_this2._adPlayer && !_this2._isEnded) {
           _this2._isEnded = true; // Signal ad player that playback completed
@@ -1462,6 +1468,9 @@ function (_UICorePlugin) {
           _this2._adPlayer && _this2._adPlayer.ended();
           _this2.__config.resetAdOnEnded && _this2._resetAd();
         }
+      });
+      this.listenTo(this.__container, _clappr.Events.CONTAINER_VOLUME, function (v) {
+        _this2._adPlayer && _this2._adPlayer.setVolume(v / 100);
       });
 
       this.__container.$el.append(this.el);
@@ -1529,6 +1538,7 @@ function (_UICorePlugin) {
       (0, _imaAdPlayer["default"])(config, function (player, error) {
         // Resume content if ad player creation failed
         if (error) {
+          _this3._mayAutoStartMutedAdPlayer = false;
           return _this3._resumeContent();
         } // Disable custom playback by default for iOS 10+ to handle skippable ads
         // Plugin will take care of video content source
@@ -1568,8 +1578,9 @@ function (_UICorePlugin) {
             _this3._isPlayingAd = false;
 
             _this3.$el.hide();
-          } // Avoid video to starts over after a post-roll
+          }
 
+          _this3._mayAutoStartMutedAdPlayer = false; // Avoid video to starts over after a post-roll
 
           if (_this3._isEnded) {
             _this3._restoreSourceIfMissing(function () {
@@ -1596,6 +1607,8 @@ function (_UICorePlugin) {
               _this3._isEnded = false;
 
               _this3._setDummySourceIfMissing(function () {
+                _this3._mayAutoStartMutedAdPlayer = true;
+
                 _this3._adPlayer.play();
               });
             } else {
