@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --progress --mode production",
     "dist": "webpack --progress --mode production",
-    "lint": "eslint webpack.config.js src",
+    "lint": "eslint webpack.config.js src/**/*.js && stylelint src/**/*.sass",
     "release": "npm run lint && npm run build && npm run dist",
     "start": "webpack-dev-server --mode development"
   },
@@ -30,6 +30,8 @@
     "eslint": "^6.8.0",
     "node-sass": "^4.12",
     "sass-loader": "^8.0",
+    "stylelint": "^13.0.0",
+    "stylelint-config-recommended": "^3.0.0",
     "terser-webpack-plugin": "^2.3.4",
     "webpack": "^4.0",
     "webpack-build-notifier": "^2.0.0",
