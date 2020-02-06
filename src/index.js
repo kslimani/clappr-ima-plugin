@@ -1,9 +1,10 @@
-import {UICorePlugin, Mediator, Events, Browser, Styler, Utils, $} from 'clappr'
+import {UICorePlugin, Events, Browser, Styler, Utils, $} from 'clappr'
 import ImaAdPlayer from 'ima-ad-player'
 import pluginStyle from './style.sass'
 
 const svgPixel = 'data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" viewBox="0 0 1 1"><rect x="0" y="0" width="1" height="1" fill="#000000" /></svg>'
 
+/* global google */
 export default class ClapprImaPlugin extends UICorePlugin {
   get name() {
     return 'ima-plugin'
@@ -221,22 +222,22 @@ export default class ClapprImaPlugin extends UICorePlugin {
       // Plugin will take care of video content source
       this.__config.enableCustomPlaybackForIOS10Plus || google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true)
 
-      player.on('ad_begin', (o) => {
+      player.on('ad_begin', () => {
         this.$el.show()
         this._isPlayingAd = true
         this._hasAdError = false
         this._pauseContent()
       })
 
-      player.on('ad_error', (o) => {
+      player.on('ad_error', () => {
         this._hasAdError = true
       })
 
-      player.on('ad_non_linear', (o) => {
+      player.on('ad_non_linear', () => {
         this._isNonLinear = true
       })
 
-      player.on('ad_end', (o) => {
+      player.on('ad_end', () => {
         if (this._isNonLinear) {
           if (this.__config.disableNonLinearForIOS && Browser.isiOS) {
             // Non-linear conflicts with "click_to_play" plugin on iOS devices,
@@ -276,7 +277,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
       // Check if autoplay was enabled
       if (this._coreAutoplay) {
         // Attempt to autoplay ad player
-        this.__playback.canAutoPlay((result, error) => {
+        this.__playback.canAutoPlay((result) => {
           if (result) {
             this._isFirstPlay = false
             this._isEnded = false
