@@ -1342,7 +1342,7 @@ var _style = _interopRequireDefault(__webpack_require__(94));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1365,6 +1365,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 var svgPixel = 'data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" viewBox="0 0 1 1"><rect x="0" y="0" width="1" height="1" fill="#000000" /></svg>';
+/* global google */
 
 var ClapprImaPlugin =
 /*#__PURE__*/
@@ -1545,7 +1546,7 @@ function (_UICorePlugin) {
 
 
         _this3.__config.enableCustomPlaybackForIOS10Plus || google.ima.settings.setDisableCustomPlaybackForIOS10Plus(true);
-        player.on('ad_begin', function (o) {
+        player.on('ad_begin', function () {
           _this3.$el.show();
 
           _this3._isPlayingAd = true;
@@ -1553,13 +1554,13 @@ function (_UICorePlugin) {
 
           _this3._pauseContent();
         });
-        player.on('ad_error', function (o) {
+        player.on('ad_error', function () {
           _this3._hasAdError = true;
         });
-        player.on('ad_non_linear', function (o) {
+        player.on('ad_non_linear', function () {
           _this3._isNonLinear = true;
         });
-        player.on('ad_end', function (o) {
+        player.on('ad_end', function () {
           if (_this3._isNonLinear) {
             if (_this3.__config.disableNonLinearForIOS && _clappr.Browser.isiOS) {
               // Non-linear conflicts with "click_to_play" plugin on iOS devices,
@@ -1601,7 +1602,7 @@ function (_UICorePlugin) {
 
         if (_this3._coreAutoplay) {
           // Attempt to autoplay ad player
-          _this3.__playback.canAutoPlay(function (result, error) {
+          _this3.__playback.canAutoPlay(function (result) {
             if (result) {
               _this3._isFirstPlay = false;
               _this3._isEnded = false;
