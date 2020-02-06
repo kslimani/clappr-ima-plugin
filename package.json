@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --progress --mode production",
     "dist": "webpack --progress --mode production",
-    "lint": "eslint webpack.config.js src && stylelint src/**/*.sass",
+    "lint": "eslint webpack.config.js src/**/*.js && stylelint src/**/*.sass",
     "release": "npm run lint && npm run build && npm run dist",
     "start": "webpack-dev-server --mode development"
   },
