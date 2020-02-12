@@ -1,0 +1,23 @@
+{
+  "http-server": {
+    "cmd": [ "webpack-dev-server", "--mode", "development" ],
+    "log": {
+      "type": "output"
+    },
+    "wait": {
+      "type": "output",
+      "options": {
+        "match": "Compiled successfully.",
+        "timeout": "15000"
+      }
+    }
+  },
+  "cypress-run": {
+    "depends": [ "http-server" ],
+    "cmd": [ "npm", "run", "cypress:run" ],
+    "log": {
+      "type": "output"
+    },
+    "exit_on_success": true
+  }
+}
