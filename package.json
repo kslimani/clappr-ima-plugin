@@ -6,9 +6,12 @@
   "scripts": {
     "build": "webpack --progress --mode production",
     "dist": "webpack --progress --mode production",
-    "lint": "eslint webpack.config.js src/**/*.js && stylelint src/**/*.sass",
+    "lint": "eslint webpack.config.js src/**/*.js tests/**/*.js && stylelint src/**/*.sass",
     "release": "npm run lint && npm run build && npm run dist",
-    "start": "webpack-dev-server --mode development"
+    "start": "webpack-dev-server --mode development",
+    "cypress:run": "cypress run --browser chrome",
+    "cypress:open": "cypress open --browser chrome",
+    "test": "cr -c .testrc.json"
   },
   "author": "Karim Slimani <karim@playmedia.fr>",
   "license": "MIT",
@@ -25,9 +28,12 @@
     "@babel/preset-env": "^7.8.4",
     "babel-loader": "^8.0",
     "babel-plugin-add-module-exports": "^1.0",
+    "command-runner": "^0.2.0",
     "core-js": "^3.4",
     "css-loader": "^3.2",
+    "cypress": "^4.0.1",
     "eslint": "^6.8.0",
+    "eslint-plugin-cypress": "^2.9.0",
     "node-sass": "^4.12",
     "sass-loader": "^8.0",
     "stylelint": "^13.0.0",

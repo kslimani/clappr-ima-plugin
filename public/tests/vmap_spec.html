@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=655, user-scalable=yes" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script type="text/javascript" src="/clappr-ima-plugin.js"></script>
+    <style>
+      .player {
+        width: 640px;
+        height: 360px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="player"></div>
+    <script>
+      (function () {
+        // Big Buck Bunny - (c) copyright 2008, Blender Foundation - www.bigbuckbunny.org
+        var BUNNY_MP4 = 'https://static.playmedia-cdn.net/resources/sample/h264_big_buck_bunny_trailer-1080p.mp4';
+
+        // VMAP Pre-, Mid-, and Post-rolls, Single Ads
+        var TAG_VMAP = 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpost&cmsid=496&vid=short_onecue&correlator=';
+
+        var bindAdPlayerEvents = function(adPlayer) {
+          [
+            'ad_begin',
+            'impression',
+            'started',
+            'first_quartile',
+            'midpoint',
+            'third_quartile',
+            'complete',
+            'ad_end',
+          ].forEach(function(e) {
+            adPlayer.on(e, function() {
+              spyEvent && spyEvent(e);
+            });
+          });
+        };
+
+        var player = new Clappr.Player({
+          parentId: '.player',
+          source: BUNNY_MP4,
+          disableKeyboardShortcuts: true,
+          disableVideoTagContextMenu: true,
+          autoSeekFromUrl: false,
+          width: '100%',
+          height: '100%',
+          autoPlay: !Clappr.Browser.isMobile,
+          mute: false,
+          playback: {
+            playInline: true,
+            recycleVideo: Clappr.Browser.isMobile,
+          },
+          events: {
+            onPlay: function() { spyEvent && spyEvent('player_play'); },
+            onEnded: function() { spyEvent && spyEvent('player_ended'); },
+          },
+          plugins: [
+            ClapprImaPlugin,
+          ],
+          imaPlugin: {
+            onAdPlayerReady: function (adPlayer) {
+              bindAdPlayerEvents(adPlayer);
+            },
+            imaAdPlayer: {
+              tag: TAG_VMAP,
+              vpaidMode: 2,
+              locale: 'fr',
+              maxDuration: 30000,
+              adsRenderingOptions: {
+                useStyledNonLinearAds: true,
+              },
+            },
+          },
+        });
+
+      })();
+    </script>
+  </body>
+</html>

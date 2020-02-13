@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "cypress/globals": true,
         "es6": true,
         "node": true
     },
@@ -13,6 +14,9 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
+    "plugins": [
+        "cypress"
+    ],
     "rules": {
     }
 }
