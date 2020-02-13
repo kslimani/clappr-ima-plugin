@@ -1,3 +1,5 @@
+![](https://github.com/kslimani/clappr-ima-plugin/workflows/Functional%20tests/badge.svg)
+
 # Interactive Media Ads (IMA) SDK plugin for Clappr
 
 [Google IMA HTML5 SDK](https://developers.google.com/interactive-media-ads/docs/sdks/html5/quickstart) advert plugin for [Clappr](https://github.com/clappr/clappr) video player.
