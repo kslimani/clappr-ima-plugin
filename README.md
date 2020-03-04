@@ -62,7 +62,7 @@ var player = new Clappr.Player({
 
 `onAdPlayerReady` can be used to retrieve [AdPlayer](https://github.com/kslimani/ima-ad-player) instance, providing a Function. _(may be usefull to bind specific ad events)_
 
-`imaAdPlayer` is [IMA Ad player](https://github.com/kslimani/ima-ad-player) configuration object. _(must at least contain "tag" property)_
+`imaAdPlayer` is IMA Ad player [configuration object](https://github.com/kslimani/ima-ad-player/blob/master/docs/config.md). _(must at least contain "tag" property)_
 
 # Development
 
