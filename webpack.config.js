@@ -28,6 +28,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: outputFile,
     library: 'ClapprImaPlugin',
+    libraryExport: 'default',
     libraryTarget: 'umd',
   },
   optimization: optimization,
