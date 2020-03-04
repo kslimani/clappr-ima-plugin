@@ -1367,9 +1367,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var svgPixel = 'data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" viewBox="0 0 1 1"><rect x="0" y="0" width="1" height="1" fill="#000000" /></svg>';
 /* global google */
 
-var ClapprImaPlugin =
-/*#__PURE__*/
-function (_UICorePlugin) {
+var ClapprImaPlugin = /*#__PURE__*/function (_UICorePlugin) {
   _inherits(ClapprImaPlugin, _UICorePlugin);
 
   _createClass(ClapprImaPlugin, [{
@@ -1827,7 +1825,6 @@ function (_UICorePlugin) {
 }(_clappr.UICorePlugin);
 
 exports["default"] = ClapprImaPlugin;
-module.exports = exports.default;
 
 /***/ }),
 /* 57 */
@@ -3878,10 +3875,8 @@ function _default(options, cb) {
     }
 
     cb(new _imaPlayer["default"](options), null);
-  }, (0, _utils.makeNum)(options.timemout, 6000), !!options.debug);
+  }, (0, _utils.makeNum)(options.timeout, 6000), !!options.debug);
 }
-
-module.exports = exports.default;
 
 /***/ }),
 /* 41 */
@@ -3930,8 +3925,6 @@ function _default(cb) {
     }, timeout);
   }
 }
-
-module.exports = exports.default;
 
 /***/ }),
 /* 42 */
@@ -4298,9 +4291,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var ImaPlayer =
-/*#__PURE__*/
-function () {
+/* global google */
+var ImaPlayer = /*#__PURE__*/function () {
   function ImaPlayer(options) {
     _classCallCheck(this, ImaPlayer);
 
@@ -4312,11 +4304,8 @@ function () {
 
     google.ima.settings.setVpaidMode(this._vpaidMode); // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.ImaSdkSettings#setLocale
 
-    if (this._o.locale) {
-      google.ima.settings.setLocale(this._o.locale);
-    } // Assumes the display container and video element are correctly positioned and sized
+    this._o.locale && google.ima.settings.setLocale(this._o.locale); // Assumes the display container and video element are correctly positioned and sized
     // https://developers.google.com/interactive-media-ads/docs/sdks/html5/#html
-
 
     this._adDisplayContainer = new google.ima.AdDisplayContainer(this._o.displayContainer, this._o.video, this._o.clickTracking);
     this._adDisplayContainerInit = false;
@@ -4400,18 +4389,50 @@ function () {
   }, {
     key: "resize",
     value: function resize(width, height) {
+      var viewMode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
       if (this._adsManager) {
         // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#resize
-        this._adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
+        viewMode || (viewMode = google.ima.ViewMode.NORMAL);
+
+        this._adsManager.resize(width, height, viewMode);
       }
     }
   }, {
     key: "setVolume",
     value: function setVolume(volume) {
-      if (this._adsManager) {
-        // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#setVolume
-        this._adsManager.setVolume(volume);
-      }
+      // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#setVolume
+      this._adsManager && this._adsManager.setVolume(volume);
+    }
+  }, {
+    key: "discardAdBreak",
+    value: function discardAdBreak() {
+      // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#discardAdBreak
+      this._adsManager && this._adsManager.discardAdBreak();
+    }
+  }, {
+    key: "pause",
+    value: function pause() {
+      // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#pause
+      this._adsManager && this._adsManager.pause();
+    }
+  }, {
+    key: "resume",
+    value: function resume() {
+      // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#resume
+      this._adsManager && this._adsManager.resume();
+    }
+  }, {
+    key: "skip",
+    value: function skip() {
+      // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#skip
+      this._adsManager && this._adsManager.skip();
+    }
+  }, {
+    key: "updateAdsRenderingSettings",
+    value: function updateAdsRenderingSettings(adsRenderingSettings) {
+      // https://developers.google.com/interactive-media-ads/docs/sdks/html5/v3/reference/js/ima.AdsManager#updateAdsRenderingSettings
+      this._adsManager && this._adsManager.updateAdsRenderingSettings(adsRenderingSettings);
     }
   }, {
     key: "setAdWillAutoPlay",
@@ -4456,13 +4477,11 @@ function () {
     key: "destroy",
     value: function destroy() {
       var unsubscribeEvents = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      this._adsManager && this._adsManager.stop();
 
-      if (!this._end) {
-        this._resetMaxDurationTimer();
+      this._endAd();
 
-        unsubscribeEvents && this._evt.unsubscribeAll();
-        this._adsManager && this._adsManager.stop();
-      }
+      unsubscribeEvents && this._evt.unsubscribeAll();
 
       this._destroyAdsManager();
 
@@ -4493,14 +4512,15 @@ function () {
       });
 
       this._adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, function (e) {
+        _this._adRequested = false;
+
         _this._onAdError(e);
       });
     }
   }, {
     key: "_requestAd",
     value: function _requestAd(options) {
-      this._end = false; // Check if ad request is pending
-
+      // Check if ad request is pending
       if (this._adRequesting) {
         // Ad will autostart if play method called
         return;
@@ -4570,7 +4590,7 @@ function () {
       });
 
       this._adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, function (e) {
-        _this2._end = false;
+        _this2._adEnded = false;
 
         _this2._dispatch('content_pause_requested', e);
 
@@ -4612,12 +4632,17 @@ function () {
         }
       });
 
+      this._adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, function (e) {
+        _this2._adRequested = false;
+
+        _this2._dispatch('all_ads_completed', e);
+      });
+
       var adEvents = {
         'ad_break_ready': google.ima.AdEvent.Type.AD_BREAK_READY,
         'ad_buffering': google.ima.AdEvent.Type.AD_BUFFERING,
         'ad_metadata': google.ima.AdEvent.Type.AD_METADATA,
         'ad_progress': google.ima.AdEvent.Type.AD_PROGRESS,
-        'all_ads_completed': google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
         'click': google.ima.AdEvent.Type.CLICK,
         'complete': google.ima.AdEvent.Type.COMPLETE,
         'duration_change': google.ima.AdEvent.Type.DURATION_CHANGE,
@@ -4724,6 +4749,8 @@ function () {
       try {
         this._dispatch('ad_play');
 
+        this._adEnded = false;
+
         this._adsManager.init(this._o.video.offsetWidth, this._o.video.offsetHeight, google.ima.ViewMode.NORMAL);
 
         this._adsManager.start();
@@ -4746,14 +4773,13 @@ function () {
   }, {
     key: "_endAd",
     value: function _endAd() {
-      if (this._end) {
+      if (this._adEnded) {
         return;
       }
 
-      this._end = true;
+      this._adEnded = true;
       this._adPlayIntent = false;
       this._adRequesting = false;
-      this._adRequested = false;
 
       this._resetMaxDurationTimer();
 
@@ -4778,7 +4804,6 @@ function () {
 }();
 
 exports["default"] = ImaPlayer;
-module.exports = exports.default;
 
 /***/ }),
 /* 59 */
@@ -4877,9 +4902,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 // observable.js
-var Observable =
-/*#__PURE__*/
-function () {
+var Observable = /*#__PURE__*/function () {
   function Observable() {
     _classCallCheck(this, Observable);
 
@@ -4936,7 +4959,6 @@ function () {
 }();
 
 exports["default"] = Observable;
-module.exports = exports.default;
 
 /***/ }),
 /* 63 */
@@ -5329,7 +5351,7 @@ module.exports = {
 
 
 /***/ })
-/******/ ]);
+/******/ ])["default"];
 });
 
 /***/ }),
@@ -5446,5 +5468,5 @@ function toComment(sourceMap) {
 }
 
 /***/ })
-/******/ ]);
+/******/ ])["default"];
 });
