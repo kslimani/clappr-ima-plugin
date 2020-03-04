@@ -2,7 +2,7 @@
 
 # Interactive Media Ads (IMA) SDK plugin for Clappr
 
-[Google IMA HTML5 SDK](https://developers.google.com/interactive-media-ads/docs/sdks/html5/quickstart) advert plugin for [Clappr](https://github.com/clappr/clappr) video player.
+[Google IMA HTML5 SDK](https://developers.google.com/interactive-media-ads/docs/sdks/html5/quickstart) ads plugin for [Clappr](https://github.com/clappr/clappr) video player.
 
 Note: Clappr player version must be >= 0.2.97.
 
@@ -54,15 +54,13 @@ var player = new Clappr.Player({
 
 # Plugin options
 
-`requestAdIfNoAutoplay` : _(default is false)_ set this option to `true` to attempt to pre-request advert if autoplay is not allowed by browser. By default, advert is requested when video content is started.
-
-`disableNonLinearForIOS` : _(default is false)_ set this option to `true` to not display non-linear advert on iOS devices. There is a [known issue](https://github.com/kslimani/clappr-ima-plugin/issues/3) with non-linear advert and "click_to_play" Clappr internal plugin on iOS devices.
-
-`resetAdOnEnded` : _(default is false)_ set this option to `true` to reset advert scenario when content video is ended. By default, advert is not displayed again if video content is restarted.
-
-`onAdPlayerReady` can be used to retrieve [AdPlayer](https://github.com/kslimani/ima-ad-player) instance, providing a Function. _(may be usefull to bind specific ad events)_
-
-`imaAdPlayer` is IMA Ad player [configuration object](https://github.com/kslimani/ima-ad-player/blob/master/docs/config.md). _(must at least contain "tag" property)_
+| Name | Type | Required | Description |
+| ---  | :---: | :---: | --- |
+| requestAdIfNoAutoplay | boolean | no | Set this option to `true` to attempt to pre-request ads if autoplay is not allowed by browser. By default, ads are requested when video content is started. (default is false) |
+| disableNonLinearForIOS | boolean | no | Set this option to `true` to not display non-linear ads on iOS devices. There is a [known issue](https://github.com/kslimani/clappr-ima-plugin/issues/3) with non-linear ads and "click_to_play" Clappr internal plugin on iOS devices. (default is false) |
+| resetAdOnEnded | boolean | no | Set this option to `true` to reset ads scenario when content video is ended. By default, ads are not displayed again if video content is restarted. (default is false) |
+| onAdPlayerReady | Function | no | Can be used to retrieve [AdPlayer](https://github.com/kslimani/ima-ad-player) instance. _(for example, to bind specific ads events)_ |
+| imaAdPlayer | object | __yes__ | The IMA Ad player [configuration object](https://github.com/kslimani/ima-ad-player/blob/master/docs/config.md). _(must at least contain "tag" property)_ |
 
 # Development
 
