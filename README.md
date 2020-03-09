@@ -55,11 +55,11 @@ var player = new Clappr.Player({
 
 | Name | Type | Required | Description |
 | ---  | :---: | :---: | --- |
-| requestAdIfNoAutoplay | boolean | no | Set this option to `true` to attempt to pre-request ads if autoplay is not allowed by browser. By default, ads are requested when video content is started. (default is false) |
-| disableNonLinearForIOS | boolean | no | Set this option to `true` to not display non-linear ads on iOS devices. There is a [known issue](https://github.com/kslimani/clappr-ima-plugin/issues/3) with non-linear ads and "click_to_play" Clappr internal plugin on iOS devices. (default is false) |
-| resetAdOnEnded | boolean | no | Set this option to `true` to reset ads scenario when content video is ended. By default, ads are not displayed again if video content is restarted. (default is false) |
-| onAdPlayerReady | Function | no | Can be used to retrieve [IMA Ad Player](https://github.com/kslimani/ima-ad-player) instance. For example, to bind specific [ad player events](https://github.com/kslimani/ima-ad-player/blob/master/docs/events.md). |
 | imaAdPlayer | object | __yes__ | The IMA Ad player [configuration object](https://github.com/kslimani/ima-ad-player/blob/master/docs/config.md). _(must at least contain "tag" property)_ |
+| disableNonLinearForIOS | boolean | no | Set this option to `true` to not display non-linear ads on iOS devices. There is a [known issue](https://github.com/kslimani/clappr-ima-plugin/issues/3) with non-linear ads and "click_to_play" Clappr internal plugin on iOS devices. (default is false) |
+| onAdPlayerReady | Function | no | Can be used to retrieve [IMA Ad Player](https://github.com/kslimani/ima-ad-player) instance. For example, to bind specific [ad player events](https://github.com/kslimani/ima-ad-player/blob/master/docs/events.md). |
+| requestAdIfNoAutoplay | boolean | no | Set this option to `true` to attempt to pre-request ads if autoplay is not allowed by browser. By default, ads are requested when video content is started. (default is false) |
+| resetAdOnEnded | boolean | no | Set this option to `true` to reset ads scenario when content video is ended. By default, ads are not displayed again if video content is restarted. (default is false) |
 
 # Development
 
