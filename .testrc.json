@@ -1,6 +1,6 @@
 {
   "http-server": {
-    "cmd": [ "webpack-dev-server", "--mode", "development" ],
+    "cmd": [ "webpack", "serve", "--mode", "development" ],
     "log": {
       "type": "output"
     },
