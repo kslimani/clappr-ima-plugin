@@ -239,7 +239,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
 
       player.on('ad_end', () => {
         if (this._isNonLinear) {
-          if (this.__config.disableNonLinearForIOS && Browser.isiOS) {
+          if (this.__config.disableNonLinear || (this.__config.disableNonLinearForIOS && Browser.isiOS)) {
             // Non-linear conflicts with "click_to_play" plugin on iOS devices,
             // therefore it is skipped if disableNonLinearForIOS is set
             this._isPlayingAd = false
