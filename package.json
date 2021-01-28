@@ -9,7 +9,7 @@
     "lint": "eslint webpack.config.js src/**/*.js tests/**/*.js && stylelint src/**/*.sass",
     "release": "npm run lint && npm run build && npm run dist",
     "start": "webpack serve --mode development",
-    "cypress:run": "cypress run --browser chromium",
+    "cypress:run": "cypress run --browser chrome",
     "cypress:open": "cypress open --browser chrome",
     "test": "cr -c .testrc.json"
   },
