@@ -4,7 +4,7 @@
 
 [Google IMA HTML5 SDK](https://developers.google.com/interactive-media-ads/docs/sdks/html5/quickstart) ads plugin for [Clappr](https://github.com/clappr/clappr) video player.
 
-Note: Clappr player version must be >= 0.2.97.
+Note: Clappr player version must be >= 0.2.97 and <= 0.4.0.
 
 To see the plugin in action, check out [demo page](https://kslimani.github.io/clappr-ima-plugin/).
 
