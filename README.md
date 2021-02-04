@@ -32,12 +32,13 @@ var player = new Clappr.Player({
   ],
   imaPlugin: {
     // requestAdIfNoAutoplay: true,
+    // disableNonLinear: true,
     // disableNonLinearForIOS: true,
     // resetAdOnEnded: true,
     // onAdPlayerReady: function (adPlayer) { adPlayer.on('midpoint', function(o) { console.log(o); }); },
     imaAdPlayer: {
       tag: 'https://myadserver.com/path/to/vast/tag.xml',
-      // vpaidMode: 2,
+      // vpaidMode: ClapprImaPlugin.vpaidMode.INSECURE,
       // locale: 'fr',
       // maxDuration: 30000,
       // nonLinearMaxDuration: 8000,
