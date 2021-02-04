@@ -17,6 +17,10 @@ export default class ClapprImaPlugin extends UICorePlugin {
     }
   }
 
+  static get vpaidMode() {
+    return ImaAdPlayer.vpaidMode
+  }
+
   constructor(core) {
     super(core)
 
