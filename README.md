@@ -1,4 +1,4 @@
-![](https://github.com/kslimani/clappr-ima-plugin/workflows/Functional%20tests/badge.svg)
+![](https://github.com/kslimani/clappr-ima-plugin/workflows/Functional%20tests/badge.svg) [![MIT license](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 # Interactive Media Ads (IMA) SDK plugin for Clappr
 
@@ -76,3 +76,7 @@ Start HTTP dev server (http://0.0.0.0:8080) :
 ```shell
   npm start
 ```
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
