@@ -7,7 +7,7 @@
     "wait": {
       "type": "output",
       "options": {
-        "match": "Compiled successfully.",
+        "match": " compiled successfully in ",
         "timeout": "15000"
       }
     }

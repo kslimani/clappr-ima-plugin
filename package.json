@@ -11,7 +11,7 @@
     "start": "webpack serve --mode development",
     "cypress:run": "cypress run --browser chrome",
     "cypress:open": "cypress open --browser chrome",
-    "test": "cr -c .testrc.json"
+    "test": "NO_COLOR=1 cr -c .testrc.json"
   },
   "author": "Karim Slimani <karim@playmedia.fr>",
   "license": "MIT",
