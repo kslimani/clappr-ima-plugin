@@ -1,4 +1,4 @@
-// Webpack 4 configuration
+// Webpack 5 configuration
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin');
 const NotifierPlugin = require('webpack-build-notifier')
@@ -9,9 +9,7 @@ var outputFile, plugins = [], optimization = {}
 if (process.env.npm_lifecycle_event === 'dist') {
   outputFile = name + '.min.js'
   optimization.minimizer = [
-    new TerserPlugin({
-      cache: true, // TODO: set to false if Webpack upgraded to 5.x ?
-    }),
+    new TerserPlugin(),
   ]
 } else {
   outputFile = name + '.js'
@@ -27,9 +25,11 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: outputFile,
-    library: 'ClapprImaPlugin',
-    libraryExport: 'default',
-    libraryTarget: 'umd',
+    library: {
+      type: 'umd',
+      name: 'ClapprImaPlugin',
+      export: 'default',
+    },
   },
   optimization: optimization,
   module: {
@@ -66,13 +66,12 @@ module.exports = {
    }
   },
   devServer: {
-    contentBase: [
+    static: [
       path.resolve(__dirname, "public"),
     ],
-    // publicPath: '/js/',
-    disableHostCheck: true, // https://github.com/webpack/webpack-dev-server/issues/882
+    // firewall: false,
     compress: true,
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 8080
   }
 }
