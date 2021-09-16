@@ -18,5 +18,6 @@
         "cypress"
     ],
     "rules": {
+        "brace-style": [2, "1tbs", { "allowSingleLine": true }]
     }
 }
