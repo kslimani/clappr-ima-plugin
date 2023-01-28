@@ -10,6 +10,12 @@ export default class ClapprImaPlugin extends UICorePlugin {
     return 'ima-plugin'
   }
 
+  get supportedVersion() {
+    return {
+      min: '0.4.0',
+    }
+  }
+
   get attributes() {
     return {
       'class': this.name,
