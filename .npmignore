@@ -1,5 +1,5 @@
 .babelrc
-cypress.json
+cypress.config.js
 .eslintrc.json
 .github
 .gitignore
