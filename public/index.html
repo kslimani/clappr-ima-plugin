@@ -4,7 +4,9 @@
     <meta name="viewport" content="width=655, user-scalable=yes" />
     <!-- <script src="http://192.168.1.113:8080/console.js"></script> -->
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@0.2.100/dist/clappr.min.js"></script> -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script> -->
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@0.4.7/dist/clappr.min.js"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     <script type="text/javascript" src="clappr-ima-plugin.js"></script>
     <style>
       .player {
@@ -115,9 +117,21 @@
           },
         });
 
+        // Backward compatible player consent
+        var consentPlayer = function(next) {
+          if (Clappr.version.startsWith('0.2') || Clappr.version.startsWith('0.3')) {
+            // Before version 0.4.0, consent method return player instance
+            player.consent();
+            next();
+          } else {
+            // Since 0.4.0, consent method is asynchronous and accept callback argument (no longer return player)
+            player.consent(next);
+          }
+        };
+
         $('.btn-sintel').on('click', function() {
-          player.consent()
-            .configure({
+          consentPlayer(function() {
+            player.configure({
               source: SINTEL,
               autoPlay: true, // player is consented
               mute: false,
@@ -131,11 +145,12 @@
                 },
               },
             });
+          });
         });
 
         $('.btn-sintel-non-linear').on('click', function() {
-          player.consent()
-            .configure({
+          consentPlayer(function() {
+            player.configure({
               source: SINTEL,
               autoPlay: true, // player is consented
               mute: false,
@@ -151,6 +166,7 @@
                 },
               },
             });
+          });
         });
 
         var resizePlayerDiv = function(w, h) {
