@@ -13,6 +13,7 @@ export default class ClapprImaPlugin extends UICorePlugin {
   get supportedVersion() {
     return {
       min: '0.4.0',
+      max: '1.0.0'
     }
   }
 
