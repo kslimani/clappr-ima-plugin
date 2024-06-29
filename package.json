@@ -1,6 +1,6 @@
 {
   "name": "clappr-ima-plugin",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "IMA SDK Plugin for Clappr.",
   "main": "dist/clappr-ima-plugin.js",
   "scripts": {
