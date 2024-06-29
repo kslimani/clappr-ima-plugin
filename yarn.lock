@@ -3620,10 +3620,10 @@ ignore@^5.2.0, ignore@^5.3.1:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.1.tgz#5073e554cd42c5b33b394375f538b8593e34d4ef"
   integrity sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==
 
-ima-ad-player@^0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/ima-ad-player/-/ima-ad-player-0.5.4.tgz#490724c5a40fa28d46b884c8aea31da1d49d88ff"
-  integrity sha512-FJqJ2N33RnhmO5NS1cW0NvVt0c/qrtPXGOtLoVKk6mhfhsqTQ4HEIesLuW99fOro7oUA9gV8bfUde2iugZkfmw==
+ima-ad-player@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/ima-ad-player/-/ima-ad-player-0.5.5.tgz#0ffe3bd2b75113e1ee86aab51a800ff0f8adee04"
+  integrity sha512-XRS3C4cIXIlhEGU3Kc2pzIkMpGVxKl8PGuPezsVFL0EC/thPXCz+v2MR4cznBdiVhCJvDebaybdfmmDfN8sclw==
 
 import-fresh@^3.2.1, import-fresh@^3.3.0:
   version "3.3.0"
