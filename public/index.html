@@ -88,17 +88,18 @@
             ClapprImaPlugin,
           ],
           imaPlugin: {
-            // onAdPlayerReady: function (adPlayer) {
-            //   adPlayer.on('started', function(o) {
-            //     console.log('displayContainer', o.target.getDisplayContainer());
-            //   });
-            //   adPlayer.on('error', function(o) {
-            //     console.log('error', o);
-            //   });
-            //   adPlayer.on('ad_error', function(o) {
-            //     console.log('ad_error', o);
-            //   });
-            // },
+            onAdPlayerReady: function (adPlayer) {
+              console.log('Google IMA HTML5 SDK version ' + google.ima.VERSION);
+              // adPlayer.on('started', function(o) {
+              //   console.log('displayContainer', o.target.getDisplayContainer());
+              // });
+              // adPlayer.on('error', function(o) {
+              //   console.log('error', o);
+              // });
+              // adPlayer.on('ad_error', function(o) {
+              //   console.log('ad_error', o);
+              // });
+            },
             // requestAdIfNoAutoplay: true,
             // disableNonLinear: true,
             // disableNonLinearForIOS: true,
